@@ -1,0 +1,68 @@
+/* Will be compiled down to a single stylesheet with your sass files */
+
+body {
+  min-height: 2000px;
+  padding-top: 70px;
+}
+
+.tab-content {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 15px;
+}
+
+.nav-tabs {
+  margin-bottom: 0;
+}
+
+.bordered {
+  position: relative;
+  padding: 15px 15px 15px;
+  margin: 0 -15px 15px;
+  margin-left: 0;
+  margin-right: 0;
+  background-color: #fff;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
+  border-radius: 4px 4px 0 0;
+  box-shadow: none;
+}
+
+.card {
+  width: 80px;
+  height: 110px;
+  color: #333;
+  background-color: #fff;
+  border-color: #adadad;
+  font-size:200%;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: bottom;
+  border: 1px solid;
+  border-radius: 4px;
+  padding-top:30px;
+  margin:10px;
+}
+
+.card-facedown {
+  background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAANklEQVQYV2NkIAIwEqHmPyFF/4GGMBJSBLYIlyKwCTCnYFOEogCfSSj+QTYJwwR063AqACkEAGnjBgmbf5VOAAAAAElFTkSuQmCC) repeat;
+}
+
+.gb-btn {
+  margin-top:10px;
+}
+
+.vspace {
+  margin-top:20px;
+}
+
+span[contenteditable=true] {
+   background: rgba(0,0,0,0); /* transparent bg */
+   resize:none; /* disable resizing */
+   display:block;
+   height:inherit;
+   padding:5px;
+}
+

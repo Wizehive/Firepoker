@@ -1,0 +1,40 @@
+
+<div class="row">
+  <div class="col-md-6">
+    <h1>Create a new game</h1>
+    <p>You can start inviting estimators after you have created the game.</p>
+    <form name="form" ng-submit="createGame()" novalidate>
+      <div class="form-group">
+        <label for="fullname">Your name (what other team members will see)</label>
+        <input ng-model="fp.user.fullname" type="text" class="form-control" id="fullname" placeholder="Enter your name" required>
+      </div>
+      <div class="form-group">
+        <label for="name">Game name</label>
+        <input ng-model="newGame.name" type="text" class="form-control" id="name" placeholder="Enter game name" required>
+        <p class="help-block">For example: 'Firepoker project'</p>
+      </div>
+      <div class="form-group">
+        <label for="description">Game description (optional)</label>
+        <input ng-model="newGame.description" type="text" class="form-control" id="description" placeholder="Enter game description">
+      </div>
+      <h3>Import</h3>
+      <div class="form-group">
+        <label for="stories">Stories (optional, one per line)</label>
+        <textarea ng-model="newGame.stories" rows="10" class="form-control" id="stories" placeholder="Enter stories"></textarea>
+        <p class="help-block">Copy and paste to import stories into your game.</p>
+      </div>
+      <div class="form-group">
+        <label for="deck">Choose the set of estimate cards you want to use.</label>
+        <select class="form-control" id="deck" ng-model="newGame.deck" required>
+          <option value="0">0, 1, 2, 4, 8, 16, 32, 64, 128, and ?</option>
+          <option value="1">0, ½, 1, 2, 3, 5, 8, 13, 20, 40, 100, and ?</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-success" ng-disabled="form.$invalid">Create game</button>
+       or <a href="#">Cancel</a>
+    </form>
+  </div>
+  <div class="col-md-4 col-md-offset-2">
+      &nbsp;
+  </div>
+</div>

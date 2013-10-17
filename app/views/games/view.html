@@ -1,0 +1,154 @@
+
+<div class="row" ng-show="game">
+  <div class="col-md-8">
+    
+    <!-- Game -->
+    <h4>{{game.name}}</h4>
+    <p>{{game.description}}</p>
+    
+    <!-- Estimated stories -->
+    <div ng-repeat="story in game.stories" class="stories">
+      <div ng-show="story.status == 'closed'" class="bordered">
+        <p class="text-right">Estimated: <span class="label label-danger">{{story.points || 0}}</span></p>
+        <h5>{{story.title}}</h5>
+        <p>{{story.notes}}</p>
+      </div>
+    </div>
+    
+    <!-- Estimate story -->
+    <div ng-show="game.estimate">
+      <!-- Story -->
+      <div class="bordered">
+        <p class="text-right">
+          <span class="label label-success">CURRENT</span>
+        </p>
+        <h4><span contenteditable="{{isOwner}}" ng-model="game.estimate.title" no-line-breaks="true">{{game.estimate.title}}</span></h4>
+        <p><span contenteditable="{{isOwner}}" ng-model="game.estimate.notes">{{game.estimate.notes}}</span></p>
+      </div>
+      <!-- Estimates -->
+      <div class="well">
+        <div ng-hide="game.estimate.results">
+          <p class="text-center text-muted">Select your estimate</p>
+        </div>
+        <div ng-show="game.estimate.results">
+          <ul class="list-inline">
+            <li ng-repeat="result in game.estimate.results">
+              <div ng-show="showCards || result.user.id == fp.user.id" class="card text-center" href="#">{{result.points}}</div>
+              <div ng-hide="showCards || result.user.id == fp.user.id" class="card card-facedown">&nbsp;</div>
+              <p class="text-center">{{result.user.fullname}}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Card deck -->
+      <div ng-show="showCardDeck" class="well well-sm">
+        <ul class="list-inline">
+          <li ng-repeat="card in decks[game.deck]"><a class="btn btn-default" href="" ng-click="estimate(card)">{{card}}</a></li>
+        </ul>
+      </div>
+      <!-- Select an estimate -->
+      <div ng-show="showSelectEstimate" class="well">
+        <form class="form-inline" role="form">
+          <div class="form-group col-md-2">
+            <label class="sr-only" for="estimate-points">Estimate</label>
+            <input ng-model="newEstimate.points" type="number" class="form-control input-small" id="estimate-points">
+          </div>
+          <button type="submit" class="btn btn-success" ng-click="acceptRound()">Accept round</button>
+          <button type="submit" class="btn btn-primary" ng-click="playAgain()" ng-disabled="disablePlayAgainAndRevealButtons">Play again</button>
+          <button type="submit" class="btn btn-primary" ng-click="revealCards()" ng-disabled="disablePlayAgainAndRevealButtons">Reveal cards</button>
+          <button type="submit" class="btn btn-primary" ng-click="resetRound()">Reset round</button>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Show info message if no active story -->
+    <div ng-show="!game.estimate" class="alert alert-info">
+      <span class="glyphicon glyphicon-exclamation-sign"></span>
+      <strong>Hi {{fp.user.fullname}}!</strong> 
+      <span ng-hide="isOwner">Wait a new round start.</span>
+      <span ng-show="isOwner">Add or select a story to start a new round.</span>
+    </div>
+    
+    <!-- Create story -->
+    <div ng-show="showAddStory">
+      <ul class="nav nav-tabs">
+        <li><a href="#free-form" data-toggle="tab" >Free-form</a></li>
+        <li class="active"><a href="#structured" data-toggle="tab">Structured</a></li>
+        <li><a href="#story-list" data-toggle="tab">Story list</a>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane" id="free-form">
+          <form name="formFreeForm" ng-submit="createStory('free-form')">
+            <div class="form-group">
+              <label for="free-form-story-title">Story</label>
+              <textarea ng-model="newStory.title" class="form-control" id="free-form-story-title" rows="3" required></textarea>
+              <p class="help-block">Type or copy and paste your story as free-form text.</p>
+            </div>
+            <div class="form-group">
+              <label for="free-form-story-notes">Notes</label>
+              <textarea ng-model="newStory.notes" class="form-control" id="free-form-story-notes" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success" ng-disabled="formFreeForm.$invalid">Add story</button>
+             or <a href="#">Cancel</a>
+          </form>
+        </div>
+        <div class="tab-pane active" id="structured">
+          <form name="formStructured" ng-submit="createStory('structured')" novalidate>
+            <div class="form-group">
+              <label for="structured-story-as-a-an">As a/an...</label>
+              <input ng-model="newStory.asA" type="text" class="form-control" id="structured-story-as-a-an" required>
+            </div>
+            <div class="form-group">
+              <label for="structured-story-i-would-like-to">I would like to...</label>
+              <input ng-model="newStory.iWouldLikeTo" type="text" class="form-control" id="structured-story-i-would-like-to" required>
+            </div>
+            <div class="form-group">
+              <label for="structured-story-so-that">So that...</label>
+              <input ng-model="newStory.soThat" type="text" class="form-control" id="structured-story-so-that" required>
+            </div>
+            <div class="form-group">
+              <label for="structured-story-notes">Notes</label>
+              <textarea ng-model="newStory.notes" class="form-control" id="structured-story-notes" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success" ng-disabled="formStructured.$invalid">Add story</button>
+             or <a href="#">Cancel</a>
+          </form>
+        </div>
+        <div class="tab-pane" id="story-list">
+          <div ng-show="game.stories">
+            <ul ng-show="game.stories" class="list-unstyled">
+              <li ng-repeat="story in game.stories" ng-show="story.status == 'queue'">
+                <div class="pull-right">
+                  <a href="" ng-click="deleteStory($index)"><span class="glyphicon glyphicon-trash"></span></a>
+                </div>
+                <a href="" ng-click="setStory($index)">{{story.title}}</a>
+                <p>{{story.notes}}</p>
+                <hr ng-show="!$last">
+              </li>
+            </ul>
+          </div>
+          <div ng-hide="game.stories">
+            <p>You have no stories.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div data-spy="affix">
+      <div ng-show="totalOfOnlineParticipants() > 0">
+        <h5>Participants ({{totalOfOnlineParticipants()}})</h5>
+        <ul class="list-unstyled">
+          <li ng-repeat="participant in game.participants" ng-show="participant.online == true">
+            {{participant.fullname}} 
+            <span ng-show="participant.id == game.owner.id">(moderator)</span>
+          </li>
+        </ul>
+      </div>
+      <div class="vspace">
+        <h5>Share this game</h5>
+        <p>Copy the address in your browser and share with team members.</p>
+      </div>
+    </div>
+  </div>
+</div>
