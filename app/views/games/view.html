@@ -1,11 +1,9 @@
 
 <div class="row" ng-show="game">
   <div class="col-md-8">
-    
     <!-- Game -->
     <h4>{{game.name}}</h4>
     <p>{{game.description}}</p>
-    
     <!-- Estimated stories -->
     <div ng-repeat="story in game.stories" class="stories">
       <div ng-show="story.status == 'closed'" class="bordered">
@@ -14,7 +12,6 @@
         <p>{{story.notes}}</p>
       </div>
     </div>
-    
     <!-- Estimate story -->
     <div ng-show="game.estimate">
       <!-- Story -->
@@ -60,7 +57,6 @@
         </form>
       </div>
     </div>
-    
     <!-- Show info message if no active story -->
     <div ng-show="!game.estimate" class="alert alert-info">
       <span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -68,7 +64,6 @@
       <span ng-hide="isOwner">Wait a new round start.</span>
       <span ng-show="isOwner">Add or select a story to start a new round.</span>
     </div>
-    
     <!-- Create story -->
     <div ng-show="showAddStory">
       <ul class="nav nav-tabs">
@@ -135,8 +130,8 @@
     </div>
   </div>
   <div class="col-md-4">
-    <div data-spy="affix">
-      <div ng-show="totalOfOnlineParticipants() > 0">
+    <div class="affix">
+      <div>
         <h5>Participants ({{totalOfOnlineParticipants()}})</h5>
         <ul class="list-unstyled">
           <li ng-repeat="participant in game.participants" ng-show="participant.online == true">

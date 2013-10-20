@@ -8,7 +8,7 @@ function guid() {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
-angular.module('planningPokerApp')
+angular.module('firePokerApp')
   .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, angularFire) {
 
     // Firebase URL
