@@ -83,3 +83,15 @@ div.logo {
 	font-size: 35px;
 	font-weight: bold;
 }
+
+.timer-display {
+  letter-spacing: 2px;
+  font-size: 72px;
+  font-weight: bold;
+}
+
+.timer-message {
+  font-size: 36px;
+  font-weight: bold;
+  color: #d9534f;
+}

@@ -144,6 +144,17 @@
         <h5>Share this game</h5>
         <p>Copy the address in your browser and share with team members.</p>
       </div>
+      <div class="vspace">
+        <h5>Discussion Timer</h5>
+        <div ng-hide="timerMessage != ''" class="timer-display">{{timerDisplay}}</div>
+        <div ng-show="timerMessage != ''" class="timer-message">{{timerMessage}}</div>
+        <div ng-show="timerControlsEnabled" class="timer-controls">
+          <button ng-hide="isTimerRunning || isTimerExpired()" ng-click="startTimer()" class="btn btn-default">Start Timer</button>
+          <button ng-show="isTimerRunning" ng-click="pauseTimer()" class="btn btn-default">Pause</button>
+          <button ng-hide="isTimerRunning || isTimerAtBeginning" ng-click="resetTimer()" class="btn btn-default">Reset</button>
+        </div>
+        <div ng-hide="timerControlsEnabled" class="timer-owner">Timer started by {{timerOwnerName}}</div>
+      </div>
     </div>
   </div>
 </div>
