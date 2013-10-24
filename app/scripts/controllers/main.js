@@ -32,11 +32,11 @@ angular.module('firePokerApp')
       }
     });
     var timerHandle;
-    var DEFAULT_COUNTER = 5;
+    var DEFAULT_COUNTER = 120;
     $scope.timerControlsEnabled = true;
     $scope.isTimerRunning = false;
     $scope.timerCounter = DEFAULT_COUNTER;
-    $scope.timerDisplay = "0:05";
+    $scope.timerDisplay = "2:00";
     $scope.timerMessage = "";
     $scope.timerOwnerName = "";
     $scope.isTimerAtBeginning = $scope.timerCounter == DEFAULT_COUNTER;
