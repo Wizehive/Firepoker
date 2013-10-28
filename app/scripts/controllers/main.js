@@ -11,7 +11,7 @@
  * @todo add remain unit tests and perfect after learn' more about testing
  */
 angular.module('firePokerApp')
-  .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, angularFire) {
+  .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, $timeout, angularFire) {
 
     // Firebase URL
     var URL = 'https://pzfqrq7kjy.firebaseio.com';
@@ -327,6 +327,11 @@ angular.module('firePokerApp')
       }
     }
 
+    // Wait 1 sec before show social buttons
+    $timeout(function() {
+      $scope.showSocialButtons = true;
+    }, 1000);
+    
     // Redirect with a GID to create new games
     $scope.redirectToCreateNewGame();
     

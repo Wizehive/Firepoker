@@ -21,8 +21,35 @@
   </div>
   <div class="vspace">
     <p class="lead">Project built with <a href="http://www.angularjs.org/" target="_blank">AngularJS</a> and <a href="http://www.firebase.com" target="_blank">Firebase</a> at <a href="http://www.wizehive.com/" target="_blank">WizeHive</a>.</p>
-    <iframe src="http://ghbtns.com/github-btn.html?user=Wizehive&repo=Firepoker&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
-    <iframe src="http://ghbtns.com/github-btn.html?user=Wizehive&repo=Firepoker&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
+  </div>
+  <div ng-show="showSocialButtons" class="vspace">
+    <!-- github -->
+    <iframe src="http://ghbtns.com/github-btn.html?user=Wizehive&amp;repo=Firepoker&amp;type=watch&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+    <iframe src="http://ghbtns.com/github-btn.html?user=Wizehive&amp;repo=Firepoker&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
+    <!-- hackernews -->
+    <a href="http://news.ycombinator.com/submit" class="hn-share-button" data-title="Firepoker.io - Planning Poker built with AngularJS and Firebase" data-url="http://firepoker.io/">Vote on HN</a>
+    <script type="text/javascript">
+        (function(d, t) {
+            var g = d.createElement(t),
+                s = d.getElementsByTagName(t)[0];
+            g.src = '//hnbutton.appspot.com/static/hn.min.js';
+            s.parentNode.insertBefore(g, s);
+        }(document, 'script'));
+    </script>
+    <!-- twitter -->
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://firepoker.io" data-text="Agile Planning Poker built with AngularJS and Firebase" data-via="wizehive" data-hashtags="firepoker.io">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <!-- facebook -->
+    <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Ffirepoker.io%2F&amp;width=100&amp;height=20&amp;colorscheme=light&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;send=true" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:20px;" allowTransparency="true"></iframe>  
+    <!-- google+ -->
+    <div class="g-plusone" data-size="medium" data-annotation="inline" data-width="100" data-href="http://firepoker.io/"></div>
+    <script type="text/javascript">
+      (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+      })();
+    </script>
   </div>
 </div>
 
