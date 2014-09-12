@@ -131,7 +131,6 @@ angular.module('firePokerApp')
       newGame.owner = $scope.fp.user;
       newGame.participants = false;
       newGame.estimate = false;
-      newGame.estimatedStories = [];
       $scope.setNewGame(newGame);
       $cookieStore.put('fp', $scope.fp);
       $location.path('/games/' + $routeParams.gid);
@@ -184,7 +183,6 @@ angular.module('firePokerApp')
       $scope.game.estimate.startedAt = new Date().getTime();
       $scope.game.estimate.endedAt = false;
       $scope.showCardDeck = true;
-      $scope.showPlayPane();
     };
 
     // Delete story
@@ -237,15 +235,11 @@ angular.module('firePokerApp')
 
     // Accept
     $scope.acceptRound = function() {
-      var estimate = $scope.game.estimate;
       $scope.game.estimate.points = $scope.newEstimate.points;
       $scope.game.estimate.endedAt = new Date().getTime();
       $scope.game.estimate.status = 'closed';
-      $scope.game.stories[$scope.game.estimate.id] = angular.copy(estimate);
+      $scope.game.stories[$scope.game.estimate.id] = angular.copy($scope.game.estimate);
       $scope.game.estimate = false;
-
-      $scope.showStoriesPane();
-      
     };
 
     // Play again
@@ -334,14 +328,6 @@ angular.module('firePokerApp')
       ) {
         $scope.showCards = true;
       }
-    };
-
-    $scope.showStoriesPane = function(){
-      $("#activateCreateStories").click();
-    };
-
-    $scope.showPlayPane = function(){
-      $("#activateEstimateStory").click();
     };
 
     // Wait 1 sec before show social buttons
@@ -479,4 +465,3 @@ angular.module('firePokerApp')
     /* END   Timer -------------- */
 
   });
-  
