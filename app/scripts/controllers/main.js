@@ -55,6 +55,8 @@ angular.module('firePokerApp')
       return $location.path() !== '/';
     };
 
+    $scope.shareUrl = encodeURIComponent($location.absUrl());
+
     // Redirect with a GID to create new games
     $scope.redirectToCreateNewGame = function() {
       if ($location.path() === '/games/new' || $location.path() === '/games/new/') {
