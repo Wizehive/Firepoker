@@ -133,7 +133,6 @@ angular.module('firePokerApp')
       newGame.owner = $scope.fp.user;
       newGame.participants = false;
       newGame.estimate = false;
-      newGame.estimatedStories = [];
       $scope.setNewGame(newGame);
       $cookieStore.put('fp', $scope.fp);
       $location.path('/games/' + $routeParams.gid);
