@@ -117,6 +117,10 @@ angular.module('firePokerApp')
           newGame = angular.copy($scope.newGame);
       if (newGame.stories) {
         angular.forEach(newGame.stories.split('\n'), function(title) {
+          if (!title){
+            return;
+          }
+
           var story = {
             title: title,
             status: 'queue'
