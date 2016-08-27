@@ -22,6 +22,17 @@
         <textarea ng-model="newGame.stories" rows="10" class="form-control" id="stories" placeholder="Enter stories"></textarea>
         <p class="help-block">Copy and paste to import stories into your game.</p>
       </div>
+      <div class="form-inline">
+        <div class="form-group col-md-9">
+          <label for="google-sheet">Import stories from google sheet (optional)</label>
+          <input ng-model="newGame.gSheet" type="text" class="form-control" id="google-sheet" placeholder="Enter a public google sheet url">
+          <p class="help-block">The sheet should be published.</p>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="">Story column</label>
+          <input ng-model="newGame.gSheetStory" type="text" class="form-control" id="google-sheet-story" placeholder="col number">
+        </div>
+      </div>
       <div class="form-group">
         <label for="deck">Choose the set of estimate cards you want to use.</label>
         <select class="form-control" id="deck" ng-model="newGame.deck" required>
