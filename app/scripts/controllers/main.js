@@ -124,6 +124,13 @@ angular.module('firePokerApp')
           stories.push(story);
         });
       }
+      if (newGame.gSheet) {
+        // Get google sheet id
+        var docid = /[\w_\d]{20,}/.exec(newGame.gSheet);
+        if (docid.length === 1) {
+          getJsonSheet(docid[0]);
+        }
+      }
       newGame.stories = stories;
       newGame.status = 'active';
       newGame.created = new Date().getTime();
