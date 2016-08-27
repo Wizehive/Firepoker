@@ -10,7 +10,7 @@
  * @author Everton Yoshitani <everton@wizehive.com>
  */
 angular.module('firePokerApp')
-  .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, $timeout, angularFire) {
+  .controller('MainCtrl', function ($rootScope, $scope, $http, $cookieStore, $location, $routeParams, $timeout, angularFire) {
 
     // Firebase URL
     var URL = 'https://pzfqrq7kjy.firebaseio.com';
@@ -28,6 +28,26 @@ angular.module('firePokerApp')
     var guid = function() {
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     };
+
+    // Get google spreadsheet data as json
+    var getJsonSheet = function(docid, storyCol) {
+      if (!storyCol) {
+        storyCol = 0;
+      }
+      var url = 'https://spreadsheets.google.com/feeds/list/' + docid + '/od6/public/basic?alt=json'
+      $http.get(url)
+        .then(function(response) {
+          var entries = response['data']['feed']['entry'];
+          angular.forEach(entries, function(entry) {
+            var rowdata = entry['content']['$t']
+            var columns = rowdata.replace(/[\s\w\d]*:/g, '').split(',');
+            $scope.game.stories.push(columns[storyCol].trim());
+          });
+
+        }, function(error) {
+          console.log(error);
+        });
+    }
 
     // Load cookies
     $scope.fp = $cookieStore.get('fp');
