@@ -117,7 +117,7 @@ angular.module('firePokerApp')
           newGame = angular.copy($scope.newGame);
       if (newGame.stories) {
         angular.forEach(newGame.stories.split('\n'), function(title) {
-          if (!title){
+          if (!title.trim){
             return;
           }
 
