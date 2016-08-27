@@ -240,6 +240,32 @@ describe('Controller: MainCtrl', function () {
     expect(location.replace).toHaveBeenCalled();
   });
 
+  it('should exclude empty lines from new game stories', function() {
+    var newGame = {
+      name: 'Test Game',
+      description: 'A unit test game',
+      stories: 'Story 1\n \n\nStore 2\nStory 3',
+      deck: 0
+    };
+    var expectedStories = [];
+    angular.forEach(newGame.stories.split('\n'), function(title) {
+      if (!title.trim){
+        return;
+      }
+      expectedStories.push({
+        title: title,
+        status: 'queue'
+      });
+    });
+    var setNewGameMock = function(game) {
+      scope.game = game;
+    };
+    spyOn(scope, 'setNewGame').andCallFake(setNewGameMock);
+    scope.newGame = newGame;
+    scope.createGame();
+    expect(scope.game.stories).toEqual(expectedStories);
+  })
+
   xit('should set new games', function() {
     // TBD
   });
