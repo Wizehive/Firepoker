@@ -29,35 +29,74 @@ angular.module('firePokerApp')
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     };
 
+    var appendStory = function(story) {
+      if (!$scope.game.stories) {
+        $scope.game.stories = [];
+      }
+      $scope.game.stories.push(story);
+    }
+
+    // Translate given sheet column name to array index
+    // http://stackoverflow.com/a/9906193/1573477
+    var sheetColToIndex = function(col) {
+      var base = 'abcdefghijklmnopqrstuvwxyz',
+          result = 0,
+          i, j;
+      col = col.toLowerCase();
+
+      for (i = 0, j = col.length - 1; i < col.length; i += 1, j -= 1) {
+        result += Math.pow(base.length, j) * (base.indexOf(col[i]) + 1);
+      }
+
+      return result - 1;
+    }
+
     // Get google spreadsheet data as json
-    var getJsonSheet = function(docid, storyCol) {
-      if (!storyCol) {
+    var importGoogleSheet = function(docid, storyCol) {
+      // Clean non alpa characters
+      storyCol = (typeof storyCol === 'string') ? storyCol.replace(/[^a-z]/ig, '') : '';
+      if (storyCol.length > 0) {
+        storyCol = sheetColToIndex(storyCol);
+      }
+      if (!storyCol || storyCol < 0) {
         storyCol = 0;
       }
 
-      var url = 'https://spreadsheets.google.com/feeds/list/' + docid + '/od6/public/basic?alt=json'
+      var url = 'https://spreadsheets.google.com/feeds/list/' + docid + '/1/public/values?alt=json'
       $http.get(url)
         .then(function(response) {
           var entries = response['data']['feed']['entry'];
+
           var stories = [];
           angular.forEach(entries, function(entry) {
             var rowdata = entry['content']['$t']
             var columns = rowdata.replace(/[\s\w\d]*:/g, '').split(',');
-            var story = {
-              title: columns[storyCol].trim(),
-              status: 'queue'
-            }
+            var story = columns[storyCol];
 
-            if (!$scope.game.stories) {
-              $scope.game.stories = [];
+            if (story && story.trim().length > 0) {
+              appendStory({
+                title: story.trim(),
+                status: 'queue'
+              })
             }
-
-            $scope.game.stories.push(story);
           });
 
         }, function(error) {
           console.log(error);
         });
+    }
+
+    var importStories = function() {
+      // import google sheet if requested by owner
+      if ($scope.game.gSheet) {
+        var docid = /[\w_-\d]{20,}/.exec($scope.game.gSheet);
+        if (docid.length === 1) {
+          importGoogleSheet(docid, $scope.game.gSheetStory);
+
+          delete $scope.game.gSheet;
+          delete $scope.game.gSheetStory;
+        }
+      }
     }
 
     // Load cookies
@@ -124,15 +163,7 @@ angular.module('firePokerApp')
           // Is current user the game owner?
           if ($scope.game.owner && $scope.game.owner.id && $scope.game.owner.id === $scope.fp.user.id) {
             $scope.isOwner = true;
-            if ($scope.game.gSheet) {
-              // Get google sheet id
-              var docid = /[\w_\d]{20,}/.exec($scope.game.gSheet);
-              if (docid.length === 1) {
-                getJsonSheet(docid[0]);
-              }
-            }
-
-            $rootScope.$emit('shahin', $scope.game);
+            importStories();
           } else {
             $scope.isOwner = false;
           }
