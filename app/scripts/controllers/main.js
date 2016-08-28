@@ -47,9 +47,13 @@ angular.module('firePokerApp')
               title: columns[storyCol].trim(),
               status: 'queue'
             }
-            stories.push(story);
-          });
 
+            if (!$scope.game.stories) {
+              $scope.game.stories = [];
+            }
+
+            $scope.game.stories.push(story);
+          });
 
         }, function(error) {
           console.log(error);
@@ -120,6 +124,15 @@ angular.module('firePokerApp')
           // Is current user the game owner?
           if ($scope.game.owner && $scope.game.owner.id && $scope.game.owner.id === $scope.fp.user.id) {
             $scope.isOwner = true;
+            if ($scope.game.gSheet) {
+              // Get google sheet id
+              var docid = /[\w_\d]{20,}/.exec($scope.game.gSheet);
+              if (docid.length === 1) {
+                getJsonSheet(docid[0]);
+              }
+            }
+
+            $rootScope.$emit('shahin', $scope.game);
           } else {
             $scope.isOwner = false;
           }
@@ -150,13 +163,6 @@ angular.module('firePokerApp')
           };
           stories.push(story);
         });
-      }
-      if (newGame.gSheet) {
-        // Get google sheet id
-        var docid = /[\w_\d]{20,}/.exec(newGame.gSheet);
-        if (docid.length === 1) {
-          getJsonSheet(docid[0]);
-        }
       }
       newGame.stories = stories;
       newGame.status = 'active';
