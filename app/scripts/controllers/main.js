@@ -36,32 +36,8 @@ angular.module('firePokerApp')
       $scope.game.stories.push(story);
     }
 
-    // Translate given sheet column name to array index
-    // http://stackoverflow.com/a/9906193/1573477
-    var sheetColToIndex = function(col) {
-      var base = 'abcdefghijklmnopqrstuvwxyz',
-          result = 0,
-          i, j;
-      col = col.toLowerCase();
-
-      for (i = 0, j = col.length - 1; i < col.length; i += 1, j -= 1) {
-        result += Math.pow(base.length, j) * (base.indexOf(col[i]) + 1);
-      }
-
-      return result - 1;
-    }
-
     // Get google spreadsheet data as json
-    var importGoogleSheet = function(docid, storyCol) {
-      // Clean non alpa characters
-      storyCol = (typeof storyCol === 'string') ? storyCol.replace(/[^a-z]/ig, '') : '';
-      if (storyCol.length > 0) {
-        storyCol = sheetColToIndex(storyCol);
-      }
-      if (!storyCol || storyCol < 0) {
-        storyCol = 0;
-      }
-
+    var importGoogleSheet = function(docid) {
       var url = 'https://spreadsheets.google.com/feeds/list/' + docid + '/1/public/values?alt=json'
       $http.get(url)
         .then(function(response) {
@@ -69,13 +45,14 @@ angular.module('firePokerApp')
 
           var stories = [];
           angular.forEach(entries, function(entry) {
-            var rowdata = entry['content']['$t']
-            var columns = rowdata.replace(/[\s\w\d]*:/g, '').split(',');
-            var story = columns[storyCol];
+            var rawdata = entry['content']['$t']
+            // regex to get userstories column
+            var regex = /user ?stor(?:y|ies): ([^,]+(?:,[^,]+)*?)(?=, [\w\s-]+:)/ig
+            var story = regex.exec(rawdata)
 
-            if (story && story.trim().length > 0) {
+            if (story) {
               appendStory({
-                title: story.trim(),
+                title: story[1].trim(),
                 status: 'queue'
               })
             }
@@ -91,7 +68,7 @@ angular.module('firePokerApp')
       if ($scope.game.gSheet) {
         var docid = /[\w_-\d]{20,}/.exec($scope.game.gSheet);
         if (docid.length === 1) {
-          importGoogleSheet(docid, $scope.game.gSheetStory);
+          importGoogleSheet(docid);
 
           delete $scope.game.gSheet;
           delete $scope.game.gSheetStory;
