@@ -34,15 +34,22 @@ angular.module('firePokerApp')
       if (!storyCol) {
         storyCol = 0;
       }
+
       var url = 'https://spreadsheets.google.com/feeds/list/' + docid + '/od6/public/basic?alt=json'
       $http.get(url)
         .then(function(response) {
           var entries = response['data']['feed']['entry'];
+          var stories = [];
           angular.forEach(entries, function(entry) {
             var rowdata = entry['content']['$t']
             var columns = rowdata.replace(/[\s\w\d]*:/g, '').split(',');
-            $scope.game.stories.push(columns[storyCol].trim());
+            var story = {
+              title: columns[storyCol].trim(),
+              status: 'queue'
+            }
+            stories.push(story);
           });
+
 
         }, function(error) {
           console.log(error);
