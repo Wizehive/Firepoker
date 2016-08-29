@@ -38,7 +38,7 @@ angular.module('firePokerApp')
 
     // Get google spreadsheet data as json
     var importGoogleSheet = function(docid) {
-      var url = 'https://spreadsheets.google.com/feeds/list/' + docid + '/1/public/values?alt=json'
+      var url = 'https://crossorigin.me/https://spreadsheets.google.com/feeds/list/' + docid + '/1/public/values?alt=json'
       $http.get(url)
         .then(function(response) {
           var entries = response['data']['feed']['entry'];
@@ -165,6 +165,10 @@ angular.module('firePokerApp')
           newGame = angular.copy($scope.newGame);
       if (newGame.stories) {
         angular.forEach(newGame.stories.split('\n'), function(title) {
+          if (!title.trim){
+            return;
+          }
+
           var story = {
             title: title,
             status: 'queue'
