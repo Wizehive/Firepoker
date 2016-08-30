@@ -22,23 +22,45 @@
         <textarea ng-model="newGame.stories" rows="10" class="form-control" id="stories" placeholder="Enter stories"></textarea>
         <p class="help-block">Copy and paste to import stories into your game.</p>
       </div>
-      <div class="row">
-        <div class="form-group col-md-9">
-          <label for="google-sheet">Import stories from google sheet (optional)</label>
-          <input ng-model="newGame.gSheet" type="text" class="form-control" id="google-sheet" placeholder="Enter a public google sheet url">
+      <div class="panel panel-default">
+        <a data-toggle="collapse" href="#import-gsheet">
+        <div class="panel-heading">
+          import user stories from google sheet (optional)
         </div>
-        <div class="form-group col-md-2">
-          <label for="google-work-sheet">Worksheet#</label>
-          <input ng-model="newGame.gWorkSheet" type="text" class="form-control" id="google-work-sheet" placeholder="1">
-        </div>
-        <div class="form-group col-md-11">
-          <ul class="help-block">
-            <li>The sheet should be published.</li>
-            <li>There should be a column with `user stories` as it's first row.</li>
-            <li>Worksheet value should be a number starting from 1</li>
-          </ul>
-        </div>
-      </div>
+        </a>
+        <div id="import-gsheet" class="panel-collapse collapse">
+          <div class="panel-body">
+            <div class="row">
+              <div class="form-group col-md-9">
+                <label for="google-sheet">Sheet url</label>
+                <input ng-model="newGame.gSheet" type="text" class="form-control" id="google-sheet" placeholder="Enter a public google sheet url">
+                <div class="checkbox">
+                  <label>
+                    <input name="newGame.gSheetNotes" type="checkbox"/> Get notes for each user story from notes column.
+                  </label>
+                </div>
+              </div>
+              <div class="form-group col-md-2">
+                <label for="google-work-sheet">Worksheet#</label>
+                <input ng-model="newGame.gWorkSheet" type="text" class="form-control" id="google-work-sheet" placeholder="1">
+              </div>
+            </div> <!-- row -->
+            <div class="btn-group" data-toggle="buttons-checkbox">
+              <a class="btn collapse-data-btn" data-toggle="collapse" href="#import-gsheet-help">
+                <i class="glyphicon glyphicon-question-sign"></i>
+                Show details
+              </a>
+            </div> <!-- .btn-group -->
+            <div id="import-gsheet-help" class="col-md-11 collapse">
+              <ul class="help-block">
+                <li>The sheet should be published.</li>
+                <li>There should be a column with `user stories` as it's first row.</li>
+                <li>Worksheet value should be a number starting from 1</li>
+              </ul>
+            </div> <!-- #import-gsheet-help -->
+          </div> <!-- .panel-body -->
+        </div> <!-- #import-gsheet -->
+      </div> <!-- .panel.panel-default -->
       <div class="form-group">
         <label for="deck">Choose the set of estimate cards you want to use.</label>
         <select class="form-control" id="deck" ng-model="newGame.deck" required>
