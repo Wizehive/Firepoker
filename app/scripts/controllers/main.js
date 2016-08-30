@@ -38,27 +38,28 @@ angular.module('firePokerApp')
 
     // Get google spreadsheet data as json
     var importGoogleSheet = function(docid, sheet, getNotes) {
+      sheet = sheet ? sheet : 1;
       var url = 'https://crossorigin.me/https://spreadsheets.google.com/feeds/list/' + docid + '/' + sheet + '/public/values?alt=json'
       $http.get(url)
         .then(function(response) {
           var entries = response['data']['feed']['entry'];
 
           angular.forEach(entries, function(entry) {
-            var rowdata = entry['content']['$t']
+            var rowdata = entry['content']['$t'];
+            var story = {status: 'queue'};
             // regex to get userstories column
-            var story = {status: 'queue'}
-            var matchDelimiters = ": ([^,]+(?:,[^,]+)*?)(?=, [\\w\\s-]+:)"
-            var titleRegex = new RegExp("user ?stor(?:y|ies)" + matchDelimiters, "ig")
-            var notesRegex = new RegExp("notes?" + matchDelimiters, "ig")
+            var matchDelimiters = ": ([^,]+(?:,[^,]+)*?)(?=, [\\w\\s-]+:)";
+            var titleRegex = new RegExp("user ?stor(?:y|ies)" + matchDelimiters, "ig");
+            var notesRegex = new RegExp("notes?" + matchDelimiters, "ig");
 
-            var title = titleRegex.exec(rowdata)
+            var title = titleRegex.exec(rowdata);
             if (title){
-              story.title = title[1].trim()
+              story.title = title[1].trim();
             }
             if (getNotes) {
-              var notes = notesRegex.exec(rowdata)
+              var notes = notesRegex.exec(rowdata);
               if (notes) {
-                story.notes = notes[1].trim()
+                story.notes = notes[1].trim();
               }
             }
 
@@ -72,7 +73,7 @@ angular.module('firePokerApp')
         });
     }
 
-    var importStories = function() {
+    $scope.importStories = function() {
       // import google sheet if requested by owner
       if ($scope.game.gSheet) {
         var docid = /[\w_-\d]{20,}/.exec($scope.game.gSheet);
@@ -83,6 +84,7 @@ angular.module('firePokerApp')
 
           delete $scope.game.gSheet;
           delete $scope.game.gSheetStory;
+          delete $scope.game.gSheetNotes;
         }
       }
     }
@@ -151,7 +153,7 @@ angular.module('firePokerApp')
           // Is current user the game owner?
           if ($scope.game.owner && $scope.game.owner.id && $scope.game.owner.id === $scope.fp.user.id) {
             $scope.isOwner = true;
-            importStories();
+            $scope.importStories();
           } else {
             $scope.isOwner = false;
           }
