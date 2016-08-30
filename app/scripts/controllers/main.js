@@ -37,26 +37,35 @@ angular.module('firePokerApp')
     }
 
     // Get google spreadsheet data as json
-    var importGoogleSheet = function(docid, sheet) {
+    var importGoogleSheet = function(docid, sheet, getNotes) {
       var url = 'https://crossorigin.me/https://spreadsheets.google.com/feeds/list/' + docid + '/' + sheet + '/public/values?alt=json'
       $http.get(url)
         .then(function(response) {
           var entries = response['data']['feed']['entry'];
 
-          var stories = [];
           angular.forEach(entries, function(entry) {
-            var rawdata = entry['content']['$t']
+            var rowdata = entry['content']['$t']
             // regex to get userstories column
-            var regex = /user ?stor(?:y|ies): ([^,]+(?:,[^,]+)*?)(?=, [\w\s-]+:)/ig
-            var story = regex.exec(rawdata)
+            var story = {status: 'queue'}
+            var matchDelimiters = ": ([^,]+(?:,[^,]+)*?)(?=, [\\w\\s-]+:)"
+            var titleRegex = new RegExp("user ?stor(?:y|ies)" + matchDelimiters, "ig")
+            var notesRegex = new RegExp("notes?" + matchDelimiters, "ig")
 
-            if (story) {
-              appendStory({
-                title: story[1].trim(),
-                status: 'queue'
-              })
+            var title = titleRegex.exec(rowdata)
+            if (title){
+              story.title = title[1].trim()
             }
-          });
+            if (getNotes) {
+              var notes = notesRegex.exec(rowdata)
+              if (notes) {
+                story.notes = notes[1].trim()
+              }
+            }
+
+            if (story.title) {
+              appendStory(story);
+            }
+          }); // angular.forEach
 
         }, function(error) {
           console.log(error);
@@ -68,8 +77,9 @@ angular.module('firePokerApp')
       if ($scope.game.gSheet) {
         var docid = /[\w_-\d]{20,}/.exec($scope.game.gSheet);
         var sheet = $scope.game.gWorkSheet ? $scope.game.gWorkSheet.replace(/[^\d]/g, '') : 1;
+        console.log($scope.game)
         if (docid.length === 1) {
-          importGoogleSheet(docid, sheet);
+          importGoogleSheet(docid, sheet, $scope.game.gSheetNotes);
 
           delete $scope.game.gSheet;
           delete $scope.game.gSheetStory;
