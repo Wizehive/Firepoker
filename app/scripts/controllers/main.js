@@ -10,7 +10,7 @@
  * @author Everton Yoshitani <everton@wizehive.com>
  */
 angular.module('firePokerApp')
-  .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, $timeout, angularFire) {
+  .controller('MainCtrl', function ($rootScope, $scope, $http, $cookieStore, $location, $routeParams, $timeout, angularFire) {
 
     // Firebase URL
     var URL = 'https://pzfqrq7kjy.firebaseio.com';
@@ -28,6 +28,66 @@ angular.module('firePokerApp')
     var guid = function() {
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     };
+
+    var appendStory = function(story) {
+      if (!$scope.game.stories) {
+        $scope.game.stories = [];
+      }
+      $scope.game.stories.push(story);
+    }
+
+    // Get google spreadsheet data as json
+    var importGoogleSheet = function(docid, sheet, getNotes) {
+      sheet = sheet ? sheet : 1;
+      var url = 'https://crossorigin.me/https://spreadsheets.google.com/feeds/list/' + docid + '/' + sheet + '/public/values?alt=json'
+      $http.get(url)
+        .then(function(response) {
+          var entries = response['data']['feed']['entry'];
+
+          angular.forEach(entries, function(entry) {
+            var rowdata = entry['content']['$t'];
+            var story = {status: 'queue'};
+            // regex to get userstories column
+            var matchDelimiters = ": ([^,]+(?:,[^,]+)*?)(?=, [\\w\\s-]+:)";
+            var titleRegex = new RegExp("user ?stor(?:y|ies)" + matchDelimiters, "ig");
+            var notesRegex = new RegExp("notes?" + matchDelimiters, "ig");
+
+            var title = titleRegex.exec(rowdata);
+            if (title){
+              story.title = title[1].trim();
+            }
+            if (getNotes) {
+              var notes = notesRegex.exec(rowdata);
+              if (notes) {
+                story.notes = notes[1].trim();
+              }
+            }
+
+            if (story.title) {
+              appendStory(story);
+            }
+          }); // angular.forEach
+
+        }, function(error) {
+          console.log(error);
+        });
+    }
+
+    $scope.importStories = function() {
+      // import google sheet if requested by owner
+      if ($scope.game.gSheet) {
+        var docid = /[\w_-\d]{20,}/.exec($scope.game.gSheet);
+        var sheet = $scope.game.gWorkSheet ? $scope.game.gWorkSheet.replace(/[^\d]/g, '') : 1;
+        console.log($scope.game)
+        if (docid.length === 1) {
+          importGoogleSheet(docid, sheet, $scope.game.gSheetNotes);
+
+          delete $scope.game.gSheet;
+          delete $scope.game.gSheetStory;
+          delete $scope.game.gSheetNotes;
+        }
+      }
+    }
 
     // Load cookies
     $scope.fp = $cookieStore.get('fp');
@@ -93,6 +153,7 @@ angular.module('firePokerApp')
           // Is current user the game owner?
           if ($scope.game.owner && $scope.game.owner.id && $scope.game.owner.id === $scope.fp.user.id) {
             $scope.isOwner = true;
+            $scope.importStories();
           } else {
             $scope.isOwner = false;
           }
@@ -117,6 +178,10 @@ angular.module('firePokerApp')
           newGame = angular.copy($scope.newGame);
       if (newGame.stories) {
         angular.forEach(newGame.stories.split('\n'), function(title) {
+          if (!title.trim){
+            return;
+          }
+
           var story = {
             title: title,
             status: 'queue'

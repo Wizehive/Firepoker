@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('firePokerApp', ['firebase', 'ngCookies'])
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, $httpProvider) {
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
     $routeProvider
       .when('/', {
         templateUrl: 'views/games/index.html',
