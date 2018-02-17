@@ -14,8 +14,8 @@ angular.module('firePokerApp')
 
     // Firebase URL
     //var URL = 'https://pzfqrq7kjy.firebaseio.com';
-    //var URL = 'https://firepokerio.firebaseio.com';
-    var URL = 'https://firepoker-75089.firebaseio.com';
+    var URL = 'https://firepokerio.firebaseio.com';
+    // var URL = 'https://firepoker-75089.firebaseio.com';
 
     // Initialize Firebase
     /*global Firebase*/
