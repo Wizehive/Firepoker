@@ -1,0 +1,13 @@
+version: "3"
+services:
+
+  app:
+    container_name: firepoker
+
+    image: firepoker
+    build:
+      context: ../..
+      dockerfile: docker/Dockerfile
+
+    ports:
+      - 8001:80

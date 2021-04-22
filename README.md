@@ -64,6 +64,42 @@ To run unit tests
 grunt karma:unit
 ```
 
+## Using Docker
+
+To use Docker, you (obviously) need to have [Docker installed](https://www.docker.com/get-started).
+
+For convenience, all Docker-related commands below are also available as an npm script.
+
+### Development
+
+To start the development environment in Docker and make the app accessible on [http://localhost:8000/](http://localhost:8000/)
+
+```
+docker-compose up -d
+```
+
+To stop and remove the development container
+
+```
+docker-compose down
+```
+
+### Testing
+
+To run tests within the Docker container
+
+```
+docker-compose run --rm app grunt test
+```
+
+### Build
+
+To build a deployment-ready docker container
+
+```
+docker build -f docker/Dockerfile -t firepoker .
+```
+
 ## Contributing
 
 Anyone and everyone is welcome to contribute. Clone the repository and fire your pull requests.

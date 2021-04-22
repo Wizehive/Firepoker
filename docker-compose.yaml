@@ -1,0 +1,17 @@
+version: "3.4"
+services:
+
+  app:
+    container_name: firepoker-dev
+
+    image: firepoker-dev
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: dev
+
+    volumes:
+      - .:/src
+    ports:
+      - 8000:9000
+      - 35729:35729

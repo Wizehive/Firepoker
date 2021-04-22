@@ -54,6 +54,8 @@ if (process.env.TRAVIS) {
   browsers = ['Firefox'];
 } else if (process.env.CI === 'drone') {
   browsers = ['PhantomJS'];
+} else if (process.env.KARMABROWSER) {
+  browsers = [process.env.KARMABROWSER];
 } else {
   browsers = ['Chrome'];
 }

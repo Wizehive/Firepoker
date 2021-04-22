@@ -29,5 +29,11 @@
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "scripts": {
+    "docker:build": "docker build -f docker/Dockerfile -t firepoker .",
+    "docker:down": "docker-compose down",
+    "docker:test": "docker-compose run --rm app grunt test",
+    "docker:up": "docker-compose up -d"
   }
 }
