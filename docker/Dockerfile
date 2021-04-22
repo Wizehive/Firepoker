@@ -33,6 +33,7 @@ FROM dev AS builder
 
 USER root
 COPY . /src
+RUN cd /src && npm install && bower install
 RUN chown -R node:node /src
 
 USER node
